@@ -1,0 +1,41 @@
+.filters {
+    display: flex;
+    gap: 1rem;
+    padding-top:1.5rem;
+    width: 90%;
+}
+.form{
+    position: relative;
+    height: 50px;
+    width: 30%;
+    max-width: 30%;
+}
+
+.form .search{
+    position: absolute;
+    /* top:20px;
+    left: 20px; */
+    color: #9ca3af;
+
+}
+.btn ,.focusbtn{
+    border:none;
+    background-color: transparent;
+    border-radius: 5px;
+  padding: 0.5rem;
+  width: fit-content;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn:hover{
+    background-color:#d1d5db
+}
+.focusbtn {
+    color: #c291e2;
+}
+.basic-multi-select {
+    width: 40%;
+    max-width: 40%;
+}

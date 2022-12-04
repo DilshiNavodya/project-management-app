@@ -1,0 +1,62 @@
+.formElement {
+    padding: 10px 40px 10px;  
+}
+.formHeading {
+    padding-bottom: 15px;
+}
+.selectItem {
+    display: flex;
+  align-items: center;
+  margin-right: 15px;
+  margin-bottom: 5px;
+  outline: none;
+  border: none;
+  height: 34px;
+}
+.selectItemLable {
+    padding: 0 3px 0 6px;
+}
+.divider {
+    margin-top: 22px;
+}
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 30px;  
+}
+.actionbtn {
+    margin-left: 10px;
+    display: inline-block;
+  padding: 0 25px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  background-color: #38015c;
+  border-radius: 3px;
+  border: none;
+  color: white;
+}
+.actionbtn:hover {
+  background-color: #c291e2;
+    color: #38015c;
+}
+
+
+
+input.inputField,
+textarea.inputField {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid #c8c5ca;
+}
+textarea:focus,
+input:focus {
+  outline: 0;
+  border-bottom: 2px solid #38015c;
+}
+textarea.inputField {
+  max-height: 200px;
+}

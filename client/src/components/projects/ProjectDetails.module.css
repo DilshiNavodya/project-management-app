@@ -1,0 +1,19 @@
+.projectDetails{
+    width: 85%;
+    height: 100vh;
+    padding-inline: 2rem;
+}
+.projectDetails h3 {
+  padding: 2rem;
+}
+.projectBoard {
+    margin-top: 20px;
+  min-width: fit-content;
+  display: flex;
+  gap: 30px;
+  padding-inline: 2rem;
+  color: var(--text-color);
+}
+.ProjectName {
+  width: 30%;
+}
