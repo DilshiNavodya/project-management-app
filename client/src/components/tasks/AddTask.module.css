@@ -60,3 +60,14 @@ input:focus {
 textarea.inputField {
   max-height: 200px;
 }
+.error-text {
+  font-size: 15px;
+  background-color: rgb(218, 57, 57);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+input[type="date"]:in-range::-webkit-datetime-edit-text { 	
+    color: transparent; 
+}

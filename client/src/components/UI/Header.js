@@ -5,10 +5,7 @@ import classes from './Header.module.css'
 import apiClient from '../../services/ApiClient';
 function Header () {
     const authCtx = useContext(AuthContext);
-
     const isLoggedIn = authCtx.isLoggedIn;
-    console.log(isLoggedIn)
-
     const navigate = useNavigate();
     const logoutHandler = async () => {
       apiClient.logout()

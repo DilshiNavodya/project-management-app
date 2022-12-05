@@ -7,29 +7,21 @@ class ApiClient {
         this.tokenName = 'token'
     }
     async setToken(token) {
-        console.log("in to set token")
         localStorage.setItem(this.tokenName,token);
     }
     getToken = async () => {
         // get Data from Storage
-        console.log("in to get token")
         try {
           const data = localStorage.getItem(this.tokenName);
-          console.log(data)
           if (data !== null) {
-            
-            console.log("in to get token if")
-            
             return data
           }
         } catch (error) {
-          console.log(error);
         }
     }
     removeToken = async () => {
         this.token = null
         localStorage.removeItem(this.tokenName)
-        console.log("token removed")
     }
 
     async request({endpoint, method = `GET`, data = {}}) {
@@ -43,7 +35,6 @@ class ApiClient {
             headers["Authorization"]=`Bearer ${this.token}`
         }
         try {
-            console.log("in to try")
             const res = await axios({url, method, data, headers})
             if(!this.token) {
                 this.setToken(res.data.token)

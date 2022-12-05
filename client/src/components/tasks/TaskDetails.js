@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../UI/Modal";
 import classes from "./TaskDetails.module.css";
 import Select from "react-select";
-import { ArrowUp, ArrowDown, Delete, Trash2 } from "react-feather";
+import { Trash2 } from "react-feather";
 import apiClient from "../../services/ApiClient";
 
 function TaskDetails(props) {
@@ -13,6 +13,7 @@ function TaskDetails(props) {
   const [taskDueDate, settaskDueDate] = useState(props.task.dueDate.toString().slice(0, 10));
   const [assignees, setAssignees] = useState();
   const [priority, setPriority] = useState(props.task.priority);
+  const [error, setError] = useState('');
   useEffect(() => {
     const fetchUsers = async () => {
       const { dataresponse, error } = await apiClient.fetchUsers();
@@ -30,50 +31,64 @@ function TaskDetails(props) {
         projectid: props.task.projectid,
         taskid: props.task._id,
       });
-      console.log(dataresponse.result);
       dataresponse.result.map((user) => {
         defaultAssignees.push({ value: user.assigneeid, label: user.name });
       });
+      setAssignees(defaultAssignees)
     };
     fetchAssignees();
   }, [props.project]);
   const selectedAssigneesHandler = (selected) => {
-    setAssignees(selected.value);
-    console.log(users);
+    setAssignees(selected);
   };
   const selectedPriorityHandler = (selected) => {
     setPriority(selected.value);
   };
   const selectedStatusHandler = async (selected) => {
+    setError("")
     const { dataresponse, error } = await apiClient.changeStatus({
       taskid: props.task._id,
       status: selected.value
     });
     if (dataresponse.result) {
       window.location.reload();
+    } else {
+      setError("Something Went Wrong")
     }
   };
   const submitFormHandler = async (event) => {
+    setError("")
     event.preventDefault();
-    const { dataresponse, error } = await apiClient.updateTaskDetails({
-      name: taskName,
-      description: taskDescription,
-      dueDate: taskDueDate,
-      assignees: assignees,
-      priority: priority,
-      status: props.status,
-      taskid: props.task._id,
-      projectid: props.task.projectid,
-    });
-      window.location.reload();
+    if(taskName.trim() === "" || taskDescription.trim() === "" || !taskDueDate === true || !priority === true || !assignees === true) {
+      setError("Fill All Fields")
+    } else {
+      const { dataresponse, error } = await apiClient.updateTaskDetails({
+        name: taskName,
+        description: taskDescription,
+        dueDate: taskDueDate,
+        assignees: assignees,
+        priority: priority,
+        status: props.status,
+        taskid: props.task._id,
+        projectid: props.task.projectid,
+      });
+      if (dataresponse.result) {
+        window.location.reload();
+      } else {
+        setError("Something Went Wrong")
+      }
+    }
   };
   const deleteTaskHandler = async (event) => {
+    setError("")
     event.preventDefault();
     const { dataresponse, error } = await apiClient.deleteTask({
       taskid: props.task._id
     });
     if (dataresponse.result) {
       window.location.reload();
+    } else {
+      setError("Something Went Wrong")
     }
   }
   const status = [
@@ -115,6 +130,7 @@ function TaskDetails(props) {
       </div>
       <form onSubmit={submitFormHandler}>
         <div className={classes.formElement}>
+        {error && <p className={classes["error-text"]}>{error}</p>}
           <div className="d-flex gap-4 justify-content-start">
             <div className={classes.detailbox}>
             <label htmlFor="task">
@@ -154,7 +170,7 @@ function TaskDetails(props) {
                 onChange={(event) => {settaskDueDate(event.target.value)}}
               />
               <div className={classes.divider} />
-              <label for="description">
+              <label htmlFor="description">
                 <span>Assignee</span>
               </label>
               <Select
@@ -166,7 +182,7 @@ function TaskDetails(props) {
                 defaultValue={defaultAssignees}
               />
               <div className={classes.divider} />
-              <label for="description">
+              <label htmlFor="description">
                 <span>Priority</span>
               </label>
               <Select

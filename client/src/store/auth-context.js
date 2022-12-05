@@ -1,54 +1,45 @@
 import React, { useState, useEffect } from "react";
-import apiClient from '../services/ApiClient'
+import apiClient from "../services/ApiClient";
 
 const AuthContext = React.createContext({
   isLoggedIn: false,
   login: () => {},
   logout: () => {},
-  userid: null,
+  uid: null
 });
 
-const isLoggedIn = async () => {
-    try {
-    const data = await apiClient.isLoggedIn();
-      console.log(data)
-      if (data !== null) {
-        return data
-      }
-    } catch (error) {
-      console.log(error);
-    }
-}
-const getUID = async () => {
-  try {
-    const {dataresponse, error} = await apiClient.getuser();
-    return dataresponse.result
-  } catch (error) {
-    return null
-  }
-}
-
 export const AuthContextProvider = (props) => {
-    const tokenData = isLoggedIn()
-    console.log(tokenData)
-    const uid = getUID()
-
-    const [isAuthenticated, setIsAuthenticated] = useState(tokenData);
-    const [userid, setuserid] = useState(uid)
-
-    const loginHandler = () => {
+  const [userid, setUserid] = useState(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(()=> {
+    const getuid = async () => {
+      const {dataresponse, error} = await apiClient.getuser();
+      setUserid(dataresponse.result)
+    }
+    const data = localStorage.getItem('token');
+      if (data !== null) {
         setIsAuthenticated(true)
+        getuid()
+      } else {
+        setIsAuthenticated(false)
+      }
+  },[])
+    const loginHandler = async () => {
+        setIsAuthenticated(true)
+        const {dataresponse, error} = await apiClient.getuser();
+        setUserid(dataresponse.result)
     }
 
     const logoutHandler = () => {
         setIsAuthenticated(false)
+        setUserid(null)
     }
 
   const contextValue = {
     isLoggedIn: isAuthenticated,
     login: loginHandler,
     logout: logoutHandler,
-    userid: userid,
+    uid: userid
   }
 
   return (

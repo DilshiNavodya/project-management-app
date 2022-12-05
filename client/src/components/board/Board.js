@@ -36,7 +36,7 @@ function Board(props) {
             <div>Add Task</div>
           </div>
         </div>
-        <div className="d-flex flex-column gap-4 p-2">
+        <div className={classes.boardTasks}>
           {props.tasks.map((task) => {
             return <Task key={task._id} status={props.status} task={task} />;
           })}

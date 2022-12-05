@@ -2,8 +2,6 @@ import React from 'react';
 import ApexCharts from 'react-apexcharts'
 
 function Chart(props) {
-  console.log(props.series)
-  console.log(props.labels)
     const series = props.series
     const lables = props.labels
         const    options = {
@@ -23,7 +21,7 @@ function Chart(props) {
                 }
               }]
             }
-  return <ApexCharts options={options} series={series} type="donut" width='80%'/>;
+  return <ApexCharts options={options} series={series} type="donut" width='150%'/>;
 }
 
 export default Chart

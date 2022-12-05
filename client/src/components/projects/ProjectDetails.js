@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import Board from "../board/Board";
 import Filters from "../board/Filters";
 import classes from "./ProjectDetails.module.css";
-import { DragDropContext } from "react-beautiful-dnd";
 import apiClient from "../../services/ApiClient";
 import AuthContext from "../../store/auth-context";
 function ProjectDetails(props) {
@@ -23,45 +22,26 @@ function ProjectDetails(props) {
   ];
   const [tasks, setTasks] = useState();
   const [tasksTmp, setTasksTmp] = useState();
-  const [assignees, setAssignees] = useState();
-  const [search, setSearch] = useState();
-  const [myTasks, setMyTasks] = useState();
   useEffect(() => {
     const fetchTasks = async () => {
       const { dataresponse, error } = await apiClient.fetchTasks({
         projectid: props.project._id,
       });
-      console.log(dataresponse.result);
       setTasks(dataresponse.result);
       setTasksTmp(dataresponse.result);
     };
     fetchTasks();
   }, [props.project]);
-  const filtermyTasks = async (task) => {
-    let uid = await authCtx.userid;
-    let res = 'false';
-    console.log(uid);
-    const { dataresponse, error } = await apiClient.fetchAssignees({
-      projectid: props.project._id,
-      taskid: task._id,
-    });
-    dataresponse.result.map((user) => {
-      if (user.assigneeid === uid) {
-        res = "true";
-      }
-    });
-    return res;
-  };
   const filterAssignees = async (task, filterdata) => {
-    let res = 'false';
+    let res = false;
     const { dataresponse, error } = await apiClient.fetchAssignees({
       projectid: props.project._id,
-      taskid: task._id,
+      taskid: task,
     });
       dataresponse.result.map((user) => {
         filterdata.map((data) => {
-          if(user._id === data.value) {
-            res = "true";
+          if(user.assigneeid === data.value) {
+            res = true;
           }
         });
       });
@@ -69,14 +49,24 @@ function ProjectDetails(props) {
   };
   const MyTasksFilterHandler = async (filterData) => {
     let Tasks = tasksTmp;
+    let temp = tasksTmp
+    let uid = authCtx.uid
     if (filterData) {
-      await Tasks.map(async (task) => {
-        let res = await filtermyTasks(task);
-        console.log(res);
-        if (res === "false") {
-          setTasks(tasks.filter((data) => data._id !== task._id));
-          console.log(tasks.filter((data) => data._id !== task._id));
+      Tasks.map(async (task) => {
+        const { dataresponse, error } = await apiClient.fetchAssignees({
+          projectid: props.project._id,
+          taskid: task._id,
+        });
+        let res = false;
+        dataresponse.result.map((user) => {
+          if (user.assigneeid === uid) {
+            res = true;
+          }
+        });
+        if (!res) {
+          temp = temp.filter((data) => data._id !== task._id);
         }
+        setTasks(temp)
       });
     } else {
       setTasks(tasksTmp);
@@ -89,27 +79,28 @@ function ProjectDetails(props) {
         return task.name.toLowerCase().indexOf(data.toLowerCase()) !== -1;
       })
     );
-    console.log(
-      Tasks.filter((task) => {
-        return task.name.toLowerCase().indexOf(data.toLowerCase()) !== -1;
-      })
-    );
   };
   const AssigneeFilterHandler = async (assignees) => {
     let Tasks = tasksTmp
-    console.log(assignees)
-    console.log(assignees.length)
+    let temp = tasksTmp
     if(assignees.length === 0) {
       setTasks(tasksTmp)
     } else {
-      await Tasks.map(async (task) => {
-        let res = await filterAssignees(task, assignees);
-        console.log(res)
-        if (res === "false") {
-          setTasks(tasks.filter((data) => data._id !== task._id));
+     Tasks.map(async (task) => {
+        let res = await filterAssignees(task._id, assignees);
+        if (!res) {
+          temp = temp.filter((data) => data._id !== task._id);
         }
+        setTasks(temp)
       });
     }
+  }
+  const FilterByDateHandler = (date) => {
+    let Tasks = tasksTmp
+    if(date !== null) {
+      Tasks = Tasks.filter((task) => task.dueDate.toString().slice(0,10) === date.toString())
+    }
+    setTasks(Tasks)
   }
   return (
     <div className={classes.projectDetails}>
@@ -120,6 +111,7 @@ function ProjectDetails(props) {
             onMyTaskFilter={MyTasksFilterHandler}
             onSearchFilterHandler={searchFilterHandler}
             onSelectAssigneeFilter={AssigneeFilterHandler}
+            onFilterByDate={FilterByDateHandler}
           />
         )}
       </div>

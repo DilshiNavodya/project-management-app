@@ -52,23 +52,23 @@ function Task(props) {
         }
       } else if(remaininghours !== 0) {
         if(remaininghours === 1) {
-          setreaminTime(remaininghours + ` day remaining`)
+          setreaminTime(remaininghours + ` hour remaining`)
         } else if (remaininghours === -1) {
-          setreaminTime(remaininghours*(-1) + ` day due`)
+          setreaminTime(remaininghours*(-1) + ` hour due`)
         } else if (remaininghours < 0) {
-          setreaminTime(remaininghours*(-1) + ` days due`)
+          setreaminTime(remaininghours*(-1) + ` hours due`)
         } else {
-          setreaminTime(remaininghours + ` days remaining`)
+          setreaminTime(remaininghours + ` hours remaining`)
         }
       } else {
         if(remainingmins === 1) {
-          setreaminTime(remainingmins + ` day remaining`)
+          setreaminTime(remainingmins + ` min remaining`)
         } else if (remainingmins === -1) {
-          setreaminTime(remainingmins*(-1) + ` day due`)
+          setreaminTime(remainingmins*(-1) + ` min due`)
         } else if (remainingmins < 0) {
-          setreaminTime(remainingmins*(-1) + ` days due`)
+          setreaminTime(remainingmins*(-1) + ` mins due`)
         } else {
-          setreaminTime(remainingmins + ` days remaining`)
+          setreaminTime(remainingmins + ` mins remaining`)
         }
       }
     }

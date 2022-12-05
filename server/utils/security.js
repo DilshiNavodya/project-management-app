@@ -31,7 +31,6 @@ const extractUserfromJwt=(req,res,next)=>{
 const requireAuthorizedUser=(req,res,next)=>{
     try{
         const {user} =res.locals
-        console.log(res.locals)
         if(!user.data){
             throw new UnauthorizedError()
         }

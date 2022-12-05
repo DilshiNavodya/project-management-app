@@ -15,10 +15,9 @@ router.post('/registerUser', async (req, res, next) => {
             email:req.body.email,
             password:req.body.password,
         })
-        console.log("new user registered")
-        return res.status(200).json({status: true})
+        const token = createUserJwt(respond._id);
+            return res.status(200).json({ status:true, token: token})
     } catch (error) {
-        console.log(error.message)
         res.status(500).send("Server Error");
     }
 } )
@@ -30,23 +29,19 @@ router.post('/loginUser', async (req, res, next) => {
             password: req.body.password,
         })
         if(user) {
-            console.log("user logged in")
             const token = createUserJwt(user._id);
             return res.status(200).json({ status:true, token: token})
         } else {
-            console.log("error")
             return res.status(200).json({ status:false})
         }
     } catch (error) {
-        console.log(error.message)
         res.status(500).send("Server Error");
     }
 } )
 
-router.get('/fetchUsers',async(req,res,next)=>{
+router.get('/fetchUsers',security.requireAuthorizedUser,async(req,res,next)=>{
     try {
         const respond = await User.find()
-        console.log("user data fetched")
         return res.status(200).json({result: respond})
     } catch (error) {
         res.status(500).send("Server Error");
@@ -54,9 +49,7 @@ router.get('/fetchUsers',async(req,res,next)=>{
 })
 
 router.get('/getuser',security.requireAuthorizedUser,async(req,res,next)=>{
-    console.log('get uid')
     const userid = res.locals.user.data;
-    console.log(userid)
     return res.status(200).json({result: userid})
 })
 

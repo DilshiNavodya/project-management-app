@@ -3,7 +3,6 @@ import apiClient from "../../services/ApiClient";
 import React, { useRef, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
-import Toast from 'react-bootstrap/Toast';
 
 function Login() {
   const [emailError, setEmailError] = useState("");
@@ -30,7 +29,6 @@ function Login() {
         email: enteredEmail,
         password: enteredPw,
       });
-      console.log(dataresponse);
       if (dataresponse.status) {
         authCtx.login();
         navigate("/dashboard");
@@ -39,18 +37,6 @@ function Login() {
       }
     }
   };
-  // const switchAuthModeHandler = async () => {
-  //   const { dataresponse, error } = await apiClient.dummy({
-  //     email: "dilshi navodya",
-  // })
-  // }
-  // const islogin = async () => {
-  //   const result = await apiClient.isLoggedIn()
-  //   console.log(result)
-  // }
-  // const logout = async () => {
-  //   apiClient.logout()
-  // }
   return (
     <section className={classes.auth}>
       <h1>Log In</h1>
